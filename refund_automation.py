@@ -52,14 +52,14 @@ writer = pd.ExcelWriter("C:/Users/snazrul/Desktop/Refunds_Code/%s refunds.xlsx" 
 
 
 backup_columns = df_all[['company ID', 'GDS Reference ID','School','School Refund Amount Received','Refund Percentage','Refund Risk Share', 'Refund O_fee Manually'
-                         ,'company write off amount - Mohela non-cash','Mohela Cashout - Without  O Fee', 'Total refund amount','Effective Date', 'Withdrawal Date','refund_incomplete_reason']
+                         ,'company write off amount - servicer non-cash','servicer Cashout - Without  O Fee', 'Total refund amount','Effective Date', 'Withdrawal Date','refund_incomplete_reason']
                         ].rename(columns={'School Refund Amount Received': 'Refund from school', 'Refund Percentage':'Refund %'})
 
 
 sum_row = backup_columns[['Refund from school',
                           'Refund Risk Share', 'Refund O_fee Manually',
-                          'company write off amount - Mohela non-cash',
-                          'Mohela Cashout - Without  O Fee',
+                          'company write off amount - servicer non-cash',
+                          'servicer Cashout - Without  O Fee',
                           'Total refund amount']].sum()
 
 sum_row_dict = sum_row.to_dict()
@@ -78,7 +78,7 @@ result_df = pd.concat([backup_columns, df_to_add], ignore_index=True)
 # backup_columns = backup_columns.append(sum_row, ignore_index=True)
 #backup_columns = pd.concat([backup_columns,sum_row],ignore_index=True)
 
-cash_columns = df_all[['GDS Reference ID','School','SSN','Sequence #', 'Disbursement Date','Mohela Cashout - Without  O Fee','Transaction','Instituition ID','Withdrawal Date']
+cash_columns = df_all[['GDS Reference ID','School','SSN','Sequence #', 'Disbursement Date','servicer Cashout - Without  O Fee','Transaction','Instituition ID','Withdrawal Date']
                       ].rename(columns={'Withdrawal Date': 'Seperation Date', 'School Refund Amount Received':'Refund/Cancel Amount'})
 
 cash_columns.insert(loc=cash_columns.columns.get_loc('Instituition ID') + 1, column='Advice', value=2)
@@ -86,8 +86,8 @@ cash_columns.insert(loc=cash_columns.columns.get_loc('Instituition ID') + 1, col
 
 
 
-non_cash_columns = df_all[df_all['Advice']==3][['company ID','GDS Reference ID','School','SSN','Sequence #', 'Disbursement Date','company write off amount - Mohela non-cash',
-                                                'Transaction','Instituition ID','Withdrawal Date']].rename(columns={'Withdrawal Date': 'Seperation Date', 'company write off amount - Mohela non-cash':'Refund/Cancel Amount'})
+non_cash_columns = df_all[df_all['Advice']==3][['company ID','GDS Reference ID','School','SSN','Sequence #', 'Disbursement Date','company write off amount - servicer non-cash',
+                                                'Transaction','Instituition ID','Withdrawal Date']].rename(columns={'Withdrawal Date': 'Seperation Date', 'company write off amount - servicer non-cash':'Refund/Cancel Amount'})
 
 non_cash_columns['Transaction'] = 1027
 non_cash_columns.insert(loc=non_cash_columns.columns.get_loc('Instituition ID') + 1, column='Advice', value=3)
