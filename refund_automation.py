@@ -3,6 +3,8 @@
 Created on Tue Sep  5 16:11:04 2023
 
 @author: snazrul
+This script looks at the refund table in the database and gathers all the refunds for the give time frame and saves them in an excel file,
+cleans them and performs calculation to be sent to the investor
 """
 
 import pandas as pd
@@ -29,10 +31,10 @@ print("Last Friday's date:", last_friday_str)
 
 
 
-connection = mysql.connector.connect(host= 'db.meritize.com',
-                                user= 'fkinyanjui',
-                                password= 'Darwinism8-Rearview-Chip',
-                                database='production' 
+connection = mysql.connector.connect(host= 'db.company.com',
+                                user= '',
+                                password= '',
+                                database='' 
                                 )
 
 def get_query(filename):
@@ -49,14 +51,14 @@ df_all = pd.read_sql(get_query(sql_file), connection)
 writer = pd.ExcelWriter("C:/Users/snazrul/Desktop/Refunds_Code/%s refunds.xlsx" %(today.strftime("%Y.%m.%d")), engine='xlsxwriter')
 
 
-backup_columns = df_all[['Meritize ID', 'GDS Reference ID','School','School Refund Amount Received','Refund Percentage','Refund Risk Share', 'Refund O_fee Manually'
-                         ,'Meritize write off amount - Mohela non-cash','Mohela Cashout - Without  O Fee', 'Total refund amount','Effective Date', 'Withdrawal Date','refund_incomplete_reason']
+backup_columns = df_all[['company ID', 'GDS Reference ID','School','School Refund Amount Received','Refund Percentage','Refund Risk Share', 'Refund O_fee Manually'
+                         ,'company write off amount - Mohela non-cash','Mohela Cashout - Without  O Fee', 'Total refund amount','Effective Date', 'Withdrawal Date','refund_incomplete_reason']
                         ].rename(columns={'School Refund Amount Received': 'Refund from school', 'Refund Percentage':'Refund %'})
 
 
 sum_row = backup_columns[['Refund from school',
                           'Refund Risk Share', 'Refund O_fee Manually',
-                          'Meritize write off amount - Mohela non-cash',
+                          'company write off amount - Mohela non-cash',
                           'Mohela Cashout - Without  O Fee',
                           'Total refund amount']].sum()
 
@@ -84,8 +86,8 @@ cash_columns.insert(loc=cash_columns.columns.get_loc('Instituition ID') + 1, col
 
 
 
-non_cash_columns = df_all[df_all['Advice']==3][['Meritize ID','GDS Reference ID','School','SSN','Sequence #', 'Disbursement Date','Meritize write off amount - Mohela non-cash',
-                                                'Transaction','Instituition ID','Withdrawal Date']].rename(columns={'Withdrawal Date': 'Seperation Date', 'Meritize write off amount - Mohela non-cash':'Refund/Cancel Amount'})
+non_cash_columns = df_all[df_all['Advice']==3][['company ID','GDS Reference ID','School','SSN','Sequence #', 'Disbursement Date','company write off amount - Mohela non-cash',
+                                                'Transaction','Instituition ID','Withdrawal Date']].rename(columns={'Withdrawal Date': 'Seperation Date', 'company write off amount - Mohela non-cash':'Refund/Cancel Amount'})
 
 non_cash_columns['Transaction'] = 1027
 non_cash_columns.insert(loc=non_cash_columns.columns.get_loc('Instituition ID') + 1, column='Advice', value=3)
@@ -102,7 +104,7 @@ non_cash_columns.to_excel(writer, sheet_name='Non_Cash', startrow = 5, index=Fal
 # writer.save()
 
 writer.close()
-#Meritize writeoff amount, anything that is not 0 is non cash
+#company writeoff amount, anything that is not 0 is non cash
 
 
 import openpyxl
@@ -113,7 +115,7 @@ workbook = openpyxl.load_workbook("C:/Users/snazrul/Desktop/Refunds_Code/%s refu
 
 workbook.active = workbook['Non_Cash']
 
-nc_string_1 = "File Naming Convention: Meritize.Refund.Roster.{}.csv".format(last_friday_str)
+nc_string_1 = "File Naming Convention: company.Refund.Roster.{}.csv".format(last_friday_str)
 nc_string_2 = "File Format: CSV"
 nc_string_3 = "Non Cash Cancellation - 1027"
 
