@@ -56,12 +56,10 @@ current_year = str(datetime.now().year)
 current_month_name = current_date.strftime("%B")
 current_month_number = current_date.month
 
-#/recordings/Meritize Support/2023/8- August 2023
-#/recordings/Meritize Support - IVA i18n
-sftp_folder = "/recordings/Meritize Support - IVA i18n"
-sftp_folder_2  ="/recordings/Meritize Support/{}/{}- {} {}".format(current_year,current_month_number,current_month_name,current_year)
-#Z:\COLLECTIONS\Customer Services - PCS call recordings\2024\3-March 2024
-current_folder = ("Z:/COLLECTIONS/Customer Services - PCS call recordings/{}").format(current_year)
+sftp_folder = ""
+sftp_folder_2  ="{}/{}- {} {}".format(current_year,current_month_number,current_month_name,current_year)
+
+current_folder = ("{}").format(current_year)
 
 current_sub_folder = ("{}/{}-{} {}").format(current_folder,current_month_number,current_month_name,current_year)
 
