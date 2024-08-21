@@ -3,6 +3,9 @@
 Created on Tue Aug 15 16:34:40 2023
 
 @author: snazrul
+
+This script looks in the database for call recordings that have a rating of less than 5 and then matches the file name
+on the sftp folder and copy them to a different folder based using the date and year
 """
 import os
 import paramiko
